@@ -11,7 +11,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - run: sudo apt-get update
       - run: DEBIAN_FRONTEND=noninteractive sudo apt-get install openjdk-8-jdk wget curl git  -y -q
       - run: git clone https://github.com/apache/spark.git
