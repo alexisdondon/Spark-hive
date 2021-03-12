@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: apt-get update
+      - run: DEBIAN_FRONTEND=noninteractive apt-get install openjdk-8-jdk wget curl git  -y -q
+      - run: git clone https://github.com/apache/spark.git
+      - run: cd spark
+      - run: git checkout tags/v3.1.1
+      - run: export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=1g"
+      - run: ./dev/make-distribution.sh --name custom-spark --tgz -Phadoop-provided -Phive -Phive-thriftserver -Pkubernetes -Dhadoop.version=3.2.1 -Dhive.version=2.3.7
+      - name: Upload build
+        uses: actions/upload-artifact@v2
+        with:
+          name: spark
+          path: /spark
