@@ -32,7 +32,12 @@ jobs:
           ./dev/make-distribution.sh --name custom-spark --tgz \
           -Phadoop-provided -Phive -Phive-thriftserver -Pkubernetes \
           -Dhadoop.version=$HADOOP_VERSION -Dhive.version=$HIVE_VERSION
+      - name: Upload build
+        uses: actions/upload-artifact@v2
+        with:
+          name: spark
+          path: ~/spark/spark-${SPARK_VERSION}-bin-custom-spark.tgz
       - name: Push to S3
         run: |
-          mc alias set s3 $AWS_S3_ENDPOINT $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY && \
+          mc alias set s3 $AWS_S3_ENDPOINT $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
           mc cp ~/spark/spark-${SPARK_VERSION}-bin-custom-spark.tgz
