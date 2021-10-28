@@ -25,7 +25,7 @@ jobs:
           sudo mv mc /usr/local/bin/mc
       - name: Get Spark sources
         run: git clone --depth 1 --branch v${SPARK_VERSION} https://github.com/apache/spark.git ~/spark
-      - run: export MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g"
+      - run: export MAVEN_OPTS="-Xss128m -Xmx2g -XX:ReservedCodeCacheSize=1g"
       - name: Build Spark from sources
         run: |
           cd ~/spark && \
