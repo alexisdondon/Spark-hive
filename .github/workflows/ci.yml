@@ -28,7 +28,7 @@ jobs:
       - name: Build Spark from sources
         run: |
           cd ~/spark && \
-          ./dev/make-distribution.sh --name custom-spark --r --tgz \
+          ./dev/make-distribution.sh --name custom-spark --tgz \
           -Phadoop-provided -Phive -Phive-thriftserver -Pkubernetes \
           -Dhadoop.version=${HADOOP_VERSION} -Dhive.version=${HIVE_VERSION}
       - name: Push to S3
