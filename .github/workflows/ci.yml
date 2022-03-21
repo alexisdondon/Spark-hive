@@ -11,7 +11,7 @@ env:
   SPARK_VERSION: 3.2.0
   HADOOP_VERSION: 3.3.1
   HIVE_VERSION: 2.3.9
-  MAVEN_OPTS: "Xms4g -Xmx8g -XX:MaxMetaspaceSize=2g -XX:ReservedCodeCacheSize=1g"
+  MAVEN_OPTS: "-Xms4g -Xmx8g -XX:MaxMetaspaceSize=2g -XX:ReservedCodeCacheSize=1g"
 
 jobs:
   build:
