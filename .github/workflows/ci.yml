@@ -11,6 +11,7 @@ env:
   SPARK_VERSION: 3.2.0
   HADOOP_VERSION: 3.3.1
   HIVE_VERSION: 2.3.9
+  MAVEN_OPTS: "Xms4g -Xmx8g -XX:MaxMetaspaceSize=2g -XX:ReservedCodeCacheSize=1g"
 
 jobs:
   build:
@@ -25,8 +26,6 @@ jobs:
           sudo mv mc /usr/local/bin/mc
       - name: Get Spark sources
         run: git clone --depth 1 --branch v${SPARK_VERSION} https://github.com/apache/spark.git ~/spark
-      - name: Override maven opts
-        run: export MAVEN_OPTS="-Xss128m -Xms12g -Xmx12g -XX:MaxMetaspaceSize=4g"
       - name: Build Spark from sources
         run: |
           cd ~/spark && \
