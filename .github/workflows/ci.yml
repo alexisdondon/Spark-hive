@@ -27,6 +27,7 @@ jobs:
         run: git clone --depth 1 --branch v${SPARK_VERSION} https://github.com/apache/spark.git ~/spark
       - name: Build Spark from sources
         run: |
+          export MAVEN_OPTS="-Xss128m -Xms12g -Xmx12g -XX:MaxMetaspaceSize=4g" && \
           cd ~/spark && \
           ./dev/make-distribution.sh --name custom-spark --tgz \
           -Phadoop-provided -Phive -Phive-thriftserver -Pkubernetes \
