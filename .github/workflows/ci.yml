@@ -2,8 +2,6 @@ name: CI
 
 on:
   push:
-    branches:
-      - "**"
     tags:
       - "*"
 
@@ -26,14 +24,25 @@ jobs:
           sudo mv mc /usr/local/bin/mc
       - name: Get Spark sources
         run: git clone --depth 1 --branch v${SPARK_VERSION} https://github.com/apache/spark.git ~/spark
+      - name: version
+        run: |
+          build_name=spark-${SPARK_VERSION}-bin-hadoop-${HADOOP_VERSION}-hive-${HIVE_VERSION}.tgz
+          echo "::set-output name=version::$build_name"
+        id: version
       - name: Build Spark from sources
         run: |
           cd ~/spark && \
           ./dev/make-distribution.sh --name custom-spark --tgz \
           -Phadoop-provided -Phadoop-cloud -Phive -Phive-thriftserver -Pkubernetes \
           -Dhadoop.version=${HADOOP_VERSION} -Dhive.version=${HIVE_VERSION}
-      - name: Push to S3
-        run: |
-          mc alias set s3 ${{ secrets.AWS_S3_ENDPOINT }} ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          build_name=spark-${SPARK_VERSION}-bin-hadoop-${HADOOP_VERSION}-hive-${HIVE_VERSION}.tgz
-          mc cp ~/spark/spark-${SPARK_VERSION}-bin-custom-spark.tgz s3/projet-onyxia/build/spark-hive/${build_name}
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref }}
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
